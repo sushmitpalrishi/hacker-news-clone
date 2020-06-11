@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
 import "./index.css";
+import "./queries.css";
 import axios from "axios";
+import Pagination from "./Pagination";
 
 import Chartjs from "chart.js";
 
@@ -17,7 +19,7 @@ export default function Home() {
     }
   }
 
-  console.log("page_count = ", page_count);
+  //console.log("page_count = ", page_count);
 
   let postDataGroup = [];
   let split_array = [];
@@ -25,8 +27,11 @@ export default function Home() {
   let voteDataGroup = [];
   let idDataGroup = [];
 
-  const [isDataLoaded, setIsDataLoaded] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [totalPostData, setTotalPostData] = useState([]);
   const [postData, setPostData] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [postsPerPage, setPostsPerPage] = useState(10);
   const [isPreviousButtonDisabled, setIsPreviousButtonDisabled] = useState(
     false
   );
@@ -76,7 +81,7 @@ export default function Home() {
   // chartInstance.update();
   //console.log("chartInstance = ", chartInstance);
   _chartInstance = chartInstance;
-  console.log("_chartInstance = ", _chartInstance);
+  //console.log("_chartInstance = ", _chartInstance);
 
   const updateDataset = (datasetIndex, newData) => {
     //console.log("chartInstance = ", _chartInstance);
@@ -265,6 +270,14 @@ export default function Home() {
     window.open(url, "_blank");
   };
 
+  let indexOfLastPost = currentPage * postsPerPage;
+  let indexOfFirstPost = indexOfLastPost - postsPerPage;
+  let currentPosts = [];
+  let paginate = pageNumber => {
+    console.log("pageNumber = ", pageNumber);
+    setCurrentPage(pageNumber);
+  };
+
   const createPostStructure = data => {
     for (var i = 0; i < data.length; i++) {
       let hidePost = React.createElement(
@@ -408,13 +421,16 @@ export default function Home() {
           }
         }
       }
-
+      let comment_data = data[i].num_comments;
+      if (comment_data == null) {
+        comment_data = "-NA-";
+      }
       let commentCount = React.createElement(
         "span",
         {
           className: "comments-count",
         },
-        data[i].num_comments
+        comment_data
       );
 
       let eachNewsContainer = React.createElement(
@@ -449,19 +465,26 @@ export default function Home() {
 
     //console.log("voteDataGroup = ", voteDataGroup);
     //console.log("idDataGroup = ", idDataGroup);
+    currentPosts = postDataGroup.slice(indexOfFirstPost, indexOfLastPost);
+    setPostData(currentPosts); //comment to test pagination
 
-    setPostData(postDataGroup);
+    //setPostData(postDataGroup);//comment to test pagination
+
     //console.log("graph data ready?", voteDataGroup, idDataGroup);
   };
 
   const getData = async page_count => {
+    setLoading(true); //will be needed later to show preloader if needed
     let res = await axios.get(
-      "https://hn.algolia.com/api/v1/search?page=" + page_count.toString()
+      "https://hn.algolia.com/api/v1/search?page=" +
+        page_count.toString() +
+        "&hitsPerPage=100"
     );
 
     let data = res.data;
+    setTotalPostData(data.hits);
+    setLoading(false); //will be needed later to show preloader if needed
     console.log("data = ", data);
-    setIsDataLoaded(true); //will be needed later to show preloader if needed
 
     createPostStructure(data.hits);
   };
@@ -526,9 +549,20 @@ export default function Home() {
           </div>
         </div>
         <div className="news-content-container">
-          <div className="each-post">{postData}</div>
+          {loading ? (
+            <h2>Loading...</h2>
+          ) : (
+            <div className="each-post">{postData}</div>
+          )}
         </div>
         <div className="pagination-btn-container">
+          <div className="pagination-holder">
+            {/* <Pagination
+              postsPerPage={postsPerPage}
+              totalPosts={totalPostData.length}
+              paginate={paginate}
+            /> */}
+          </div>
           <div className="pagination-btns">
             <button
               disabled={isPreviousButtonDisabled}
