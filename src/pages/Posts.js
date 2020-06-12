@@ -152,9 +152,9 @@ const Posts = ({
                     upvote_data_holder[k].click
                   );
                   //console.log(
-                    "local storage data updated = ",
-                    upvote_data_holder[k].click
-                  );
+                  // "local storage data updated = ",
+                  // upvote_data_holder[k].click
+                  //);
                 } else {
                   // voteCount = React.createElement(
                   //   "span",
@@ -361,40 +361,41 @@ const Posts = ({
         if (localStoragePageData[j].page_count == page_count) {
           upvote_data_holder = localStoragePageData[j].upvote_data_holder;
           var foundIndex = "";
-          for (var k = 0; k < upvote_data_holder.length; k++) {
-            // //console.log(
-            //   "upvote_data_holder[k].click_parent_id = ",
-            //   typeof upvote_data_holder[k].click_parent_id
-            // );
-            // //console.log(
-            //   "e.currentTarget.parentNode.parentNode.getAttribute = ",
-            //   typeof e.currentTarget.parentNode.parentNode.getAttribute("id")
-            // );
-            if (
-              upvote_data_holder[k].click_parent_id ==
-              e.currentTarget.parentNode.parentNode.getAttribute("id")
-            ) {
-              foundIndex = k;
+          if (upvote_data_holder) {
+            for (var k = 0; k < upvote_data_holder.length; k++) {
+              // //console.log(
+              //   "upvote_data_holder[k].click_parent_id = ",
+              //   typeof upvote_data_holder[k].click_parent_id
+              // );
+              // //console.log(
+              //   "e.currentTarget.parentNode.parentNode.getAttribute = ",
+              //   typeof e.currentTarget.parentNode.parentNode.getAttribute("id")
+              // );
+              if (
+                upvote_data_holder[k].click_parent_id ==
+                e.currentTarget.parentNode.parentNode.getAttribute("id")
+              ) {
+                foundIndex = k;
+              }
             }
-          }
+            if (foundIndex != "") {
+              upvote_data_holder[foundIndex].click =
+                e.currentTarget.parentNode.parentNode.children[1].innerHTML;
+            } else {
+              upvote_data.click =
+                e.currentTarget.parentNode.parentNode.children[1].innerHTML;
+              upvote_data.click_parent_id = e.currentTarget.parentNode.parentNode.getAttribute(
+                "id"
+              );
+              upvote_data_holder.push(upvote_data);
+            }
 
-          if (foundIndex != "") {
-            upvote_data_holder[foundIndex].click =
-              e.currentTarget.parentNode.parentNode.children[1].innerHTML;
-          } else {
-            upvote_data.click =
-              e.currentTarget.parentNode.parentNode.children[1].innerHTML;
-            upvote_data.click_parent_id = e.currentTarget.parentNode.parentNode.getAttribute(
-              "id"
-            );
-            upvote_data_holder.push(upvote_data);
-          }
-
-          if (typeof window !== "undefined") {
-            localStorage.setItem(
-              "page_persistence_data",
-              JSON.stringify(localStoragePageData)
-            );
+            if (typeof window !== "undefined") {
+              localStorage.setItem(
+                "page_persistence_data",
+                JSON.stringify(localStoragePageData)
+              );
+            }
           }
 
           break;
