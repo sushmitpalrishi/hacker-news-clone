@@ -9,23 +9,19 @@ const Posts = ({
   setUpdateGraphOnUpVote,
   getUpvoteUpdate,
 }) => {
-  // //console.log("setVoteDataGroup = ", setVoteDataGroup);
   let split_array = [];
-  // let page_count;
   let postDataGroup = [];
   let data_persistence_array = [];
   const [shouldVoteCountUpdate, setShouldVoteCountUpdate] = useState(false);
-  // const [shouldGraphUpdate, setShouldGraphUpdate] = useState(false);
-  //let voteDataGroup = [];
-  //let idDataGroup = [];
 
   const onMainTextContentClick = (e, url) => {
-    window.open(url, "_blank");
+    if (typeof window !== "undefined") {
+      window.open(url, "_blank");
+    }
   };
 
-  const createPostStructure = data => {
-    ////console.log("comes here");
-    for (var i = 0; i < data.length; i++) {
+  let createPostStructure = data => {
+    data.map(function (item, i) {
       let hidePost = React.createElement(
         "button",
         {
@@ -41,8 +37,6 @@ const Posts = ({
 
       var time_string = temp_time.toString();
       var split_time_string = time_string.split(" GMT");
-
-      // //console.log("time_string = ",time_string.split(" GMT"));
 
       let newsPostTime = React.createElement(
         "button",
@@ -70,9 +64,7 @@ const Posts = ({
         split_array = [];
         let temp_url = data[i].url;
         split_array = temp_url.split("/");
-        ////console.log("split_array = ", split_array);
       } else {
-        ////console.log("null found");
         //to do fill empty urls with demo links
       }
 
@@ -127,22 +119,20 @@ const Posts = ({
       );
       let localStoragePageData;
       if (typeof window !== "undefined") {
-        ////console.log("local storage created!");
         //put local storage data here
         localStoragePageData = JSON.parse(
           localStorage.getItem("page_persistence_data")
         );
       }
 
-      ////console.log("localStoragePageData = ", localStoragePageData);
       let upvote_data_holder = [];
       //update modified data in current page
       if (localStoragePageData) {
-        for (var p = 0; p < localStoragePageData.length; p++) {
+        localStoragePageData.map(function (item, p) {
           if (localStoragePageData[p].page_count == page_count) {
             upvote_data_holder = localStoragePageData[p].upvote_data_holder;
             if (upvote_data_holder) {
-              for (var k = 0; k < upvote_data_holder.length; k++) {
+              upvote_data_holder.map(function (item, k) {
                 if (upvote_data_holder[k].click_parent_id == data[i].objectID) {
                   voteCount = React.createElement(
                     "span",
@@ -151,23 +141,11 @@ const Posts = ({
                     },
                     upvote_data_holder[k].click
                   );
-                  //console.log(
-                  // "local storage data updated = ",
-                  // upvote_data_holder[k].click
-                  //);
-                } else {
-                  // voteCount = React.createElement(
-                  //   "span",
-                  //   {
-                  //     className: "vote-count",
-                  //   },
-                  //   data[i].points
-                  // );
                 }
-              }
+              });
             }
           }
-        }
+        });
       }
       let comment_data = data[i].num_comments;
       if (comment_data == null) {
@@ -200,18 +178,14 @@ const Posts = ({
         hidePost
       );
 
-      ////console.log("eachNewsContainer = ", eachNewsContainer);
-
       //update modified data in current page
       if (localStoragePageData) {
         let hidden_post_id_group = [];
         for (var z = 0; z < localStoragePageData.length; z++) {
           hidden_post_id_group = localStoragePageData[z].hidden_post_id_group;
-          //console.log("hidden_post_id_group = ", hidden_post_id_group);
 
           for (var w = 0; w < hidden_post_id_group.length; w++) {
             if (hidden_post_id_group[w] == data[i].objectID) {
-              //console.log("comes in hidden");
               eachNewsContainer = React.createElement(
                 "span",
                 {
@@ -239,28 +213,15 @@ const Posts = ({
         let eachPostBreak = React.createElement("br", { key: i });
         postDataGroup.push(eachPostBreak);
       }
-      //voteDataGroup.push(data[i].points); //to be fixed after pagination
-      //idDataGroup.push(data[i].objectID); //to be fixed after pagination
-
-      //setShouldGraphUpdate(true);
-    }
-
-    //getVoteDataGroupChange(voteDataGroup);
-    //getIdDataGroupChange(idDataGroup);
-    // setIdDataGroup(idDataGroup);
-    // setVoteDataGroup(voteDataGroup);
-
-    ////console.log("voteDataGroup = ", voteDataGroup);
-    ////console.log("idDataGroup = ", idDataGroup);
-
-    ////console.log("graph data ready?", voteDataGroup, idDataGroup);
+    });
   };
 
-  createPostStructure(posts);
+  if (posts) {
+    createPostStructure(posts);
+  }
 
   const onHidePostClick = e => {
     e.currentTarget.parentNode.style.display = "none";
-    // //console.log("nextsibling = ", e.currentTarget.parentNode.nextSibling);
     if (e.currentTarget.parentNode.nextSibling != null) {
       e.currentTarget.parentNode.nextSibling.style.display = "none";
     }
@@ -273,7 +234,6 @@ const Posts = ({
 
     let each_data_holder_obj = {};
     let hidden_post_id_group = [];
-    //console.log("localStoragePageData = ", localStoragePageData);
 
     if (localStoragePageData) {
       for (var j = 0; j < localStoragePageData.length; j++) {
@@ -293,10 +253,6 @@ const Posts = ({
             );
           }
 
-          if (typeof window !== "undefined") {
-            //console.log(localStorage.getItem("page_persistence_data"));
-          }
-
           break;
         } else {
           continue;
@@ -310,7 +266,6 @@ const Posts = ({
       hidden_post_id_group.push(e.currentTarget.parentNode.getAttribute("id"));
       each_data_holder_obj.hidden_post_id_group = hidden_post_id_group;
       data_persistence_array.push(each_data_holder_obj);
-      //console.log("data_persistence_array = ", data_persistence_array);
 
       if (typeof window !== "undefined") {
         localStorage.setItem(
@@ -328,8 +283,6 @@ const Posts = ({
         localStorage.getItem("page_persistence_data")
       );
     }
-
-    //console.log("localStoragePageData = ", localStoragePageData);
 
     let each_data_holder_obj = {};
     let upvote_data_holder = [];
@@ -363,14 +316,6 @@ const Posts = ({
           var foundIndex = "";
           if (upvote_data_holder) {
             for (var k = 0; k < upvote_data_holder.length; k++) {
-              // //console.log(
-              //   "upvote_data_holder[k].click_parent_id = ",
-              //   typeof upvote_data_holder[k].click_parent_id
-              // );
-              // //console.log(
-              //   "e.currentTarget.parentNode.parentNode.getAttribute = ",
-              //   typeof e.currentTarget.parentNode.parentNode.getAttribute("id")
-              // );
               if (
                 upvote_data_holder[k].click_parent_id ==
                 e.currentTarget.parentNode.parentNode.getAttribute("id")
@@ -451,4 +396,5 @@ const Posts = ({
   }
   return <div className="each-post">{postDataGroup}</div>;
 };
+
 export default Posts;

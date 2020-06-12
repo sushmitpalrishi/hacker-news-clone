@@ -20,31 +20,5 @@ module.exports = {
     {
       resolve: `gatsby-plugin-offline`,
     },
-    `gatsby-plugin-react-helmet`,
-    {
-      resolve: "gatsby-plugin-seo",
-      options: {
-        siteName: "Hacker News Clone",
-        defaultSiteImage: "src/images/y_icon.png",
-        siteUrl: "https://hacker-news-clone-gatsby.netlify.app/",
-        twitterCreator: "@twitterhandle",
-        twitterSite: "@twitterhandle",
-        globalSchema: `{
-            "@type": "WebSite",
-            "@id": "https://hacker-news-clone-gatsby.netlify.app/",
-            "url": "https://hacker-news-clone-gatsby.netlify.app/",
-            "name": "Hacker News Clone",
-            "publisher": {
-              "@id": "https://github.com/sushmitpalrishi"
-            },
-            "image": {
-              "@type": "ImageObject",
-              "@id": "https://github.com/sushmitpalrishi",
-              "url": "src/images/y_icon.png",
-              "caption": "Hacker News Clone Gatsby"
-            }
-          }`,
-      },
-    },
   ],
 };

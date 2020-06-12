@@ -2,16 +2,16 @@ import React, { useState, useRef, useEffect, useCallback } from "react";
 import "./index.css";
 import "./queries.css";
 import axios from "axios";
+import Posts from "./Posts";
 import Pagination from "./Pagination";
 
 import Chartjs from "chart.js";
-import Posts from "./Posts";
 
 let _chartInstance = "";
 let page_count;
 let voteDataGroup = [];
 let idDataGroup = [];
-let currentPosts;
+let currentPosts = [];
 let allPostData;
 let currentPostInPage;
 
@@ -25,18 +25,13 @@ export default function Home() {
     }
   }
 
-  ////console.log("page_count = ", page_count);
-
-  // const [voteDataGroup,setVoteDataGroup] = useState([]);
-  // const [idDataGroup,setIdDataGroup] = useState([]);
-
   const chartContainer = useRef(null);
   let [chartInstance, setChartInstance] = useState(null);
   const [updateGraphOnUpVote, setUpdateGraphOnUpVote] = useState({});
   const getUpvoteUpdate = useCallback(updatedUpvoteCount => {
     setUpdateGraphOnUpVote(updatedUpvoteCount);
     //do other things here
-    //console.log("updatedUpvoteCount = ", updatedUpvoteCount);
+
     handleGraphUpdateOnUpvoteClick(updatedUpvoteCount);
   }, []);
 
@@ -76,18 +71,13 @@ export default function Home() {
   useEffect(() => {
     if (chartContainer && chartContainer.current) {
       const newChartInstance = new Chartjs(chartContainer.current, chartConfig);
-      ////console.log("newChartInstance = ", newChartInstance);
       setChartInstance(newChartInstance);
     }
   }, [chartContainer]);
-  // chartInstance.update();
-  ////console.log("chartInstance = ", chartInstance);
+  //sorry this hack was needed
   _chartInstance = chartInstance;
-  ////console.log("_chartInstance = ", _chartInstance);
 
   const updateDataset = (datasetIndex, newData, newLabel) => {
-    ////console.log("chartInstance = ", _chartInstance);
-    //setChartInstance(_chartInstance);
     chartInstance = _chartInstance;
     chartInstance.data.datasets[datasetIndex].data = newData;
     chartInstance.data.labels = newLabel;
@@ -105,13 +95,10 @@ export default function Home() {
   let indexOfLastPost = currentPage * postsPerPage;
   let indexOfFirstPost = indexOfLastPost - postsPerPage;
   currentPosts = totalPostData.slice(indexOfFirstPost, indexOfLastPost);
+
   currentPostInPage = totalPostData.slice(indexOfFirstPost, indexOfLastPost);
-  ////console.log("currentPosts = ", currentPosts);
-  ////console.log("totalPostData = ", totalPostData);
+
   let paginate = pageNumber => {
-    //console.log("pageNumber = ", pageNumber);
-    //console.log("totalPostData = ", totalPostData);
-    
     page_count = pageNumber;
     setCurrentPage(pageNumber);
     idDataGroup = [];
@@ -121,8 +108,6 @@ export default function Home() {
       voteDataGroup.push(currentPosts[q].points);
       idDataGroup.push(currentPosts[q].objectID);
     }
-    //console.log("voteDataGroup = ", voteDataGroup);
-    //console.log("idDataGroup = ", idDataGroup);
 
     updateDataset(0, voteDataGroup, idDataGroup);
   };
@@ -138,20 +123,13 @@ export default function Home() {
         allPostData = data.hits;
 
         setLoading(false); //will be needed later to show preloader if needed
-        //console.log("data = ", data);
-
-        // setTimeout(function () {
-
-        // }, 1000);
 
         // update graph array here
         for (var q = 0; q < data.hits.length; q++) {
           voteDataGroup.push(data.hits[q].points);
           idDataGroup.push(data.hits[q].objectID);
         }
-        //console.log("gets called");
-        ////console.log("voteDataGroup = ", voteDataGroup);
-        ////console.log("idDataGroup = ", idDataGroup);
+
         updateDataset(0, voteDataGroup, idDataGroup);
       });
   };
@@ -162,7 +140,7 @@ export default function Home() {
     }
 
     page_count = parseInt(page_count) + 1;
-    //console.log("page_count = ", page_count);
+
     setIsPreviousButtonDisabled(false);
     //style of the button has to changed to enabled
     if (typeof window !== "undefined") {
@@ -175,7 +153,6 @@ export default function Home() {
     }
 
     page_count = parseInt(page_count) - 1;
-    //console.log("page_count = ", page_count);
 
     if (page_count <= 0) {
       page_count = 0;
@@ -195,16 +172,6 @@ export default function Home() {
       voteDataGroup.push(currentPostInPage[q].points);
       idDataGroup.push(currentPostInPage[q].objectID);
     }
-    ////console.log("voteDataGroup = ", voteDataGroup);
-    ////console.log("idDataGroup = ", idDataGroup);
-    ////console.log("currentPosts = ", currentPosts);
-    ////console.log("totalPostData = ", totalPostData);
-    ////console.log("allPostData = ", allPostData);
-    
-    ////console.log("currentPostInPage = ", currentPostInPage);
-    ////console.log("e = ", e);
-    
-    
 
     //update graph to be fixed after pagination
 
@@ -214,7 +181,7 @@ export default function Home() {
         break;
       }
     }
-    ////console.log("chartinstance = ", chartInstance);
+
     updateDataset(0, voteDataGroup, idDataGroup);
   };
 
@@ -258,22 +225,22 @@ export default function Home() {
             
           </div> */}
           <div className="pagination-btns">
-            <button
+            {/* <button
               disabled={isPreviousButtonDisabled}
               onClick={onPreviousPageClick}
               className="previous-page"
             >
               previous
-            </button>
+            </button> */}
             {/* <span className="btn-separator">|</span> */}
             <Pagination
               postsPerPage={postsPerPage}
               totalPosts={totalPostData.length}
               paginate={paginate}
             />
-            <button onClick={onNextPageClick} className="next-page">
+            {/* <button onClick={onNextPageClick} className="next-page">
               next
-            </button>
+            </button> */}
           </div>
         </div>
         <div className="timeline-chart">
