@@ -42,6 +42,15 @@
   padding: 0px 2%;
 }
 
+.each-news-container {
+  padding: 5px;
+  background-color: beige;
+}
+
+.each-news-container-hidden {
+  display: none;
+}
+
 .each-news-container button {
   text-decoration: none;
   color: #a1a1a1;
@@ -51,10 +60,10 @@
   outline: none;
   cursor: pointer;
 }
-.comments-count{
-  white-space: nowrap
+.comments-count {
+  white-space: nowrap;
 }
-.main-news-content{
+.main-news-content {
   cursor: pointer;
 }
 .pagination-btn-container {
@@ -67,10 +76,7 @@
 }
 .pagination-btns button {
   text-decoration: none;
-  background: none !important;
-  border: none;
-  padding: 0 !important;
-  outline: none;
+  padding: 2px;
   cursor: pointer;
 }
 .previous-page {
