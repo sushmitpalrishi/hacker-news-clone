@@ -184,25 +184,27 @@ const Posts = ({
         for (var z = 0; z < localStoragePageData.length; z++) {
           hidden_post_id_group = localStoragePageData[z].hidden_post_id_group;
 
-          for (var w = 0; w < hidden_post_id_group.length; w++) {
-            if (hidden_post_id_group[w] == data[i].objectID) {
-              eachNewsContainer = React.createElement(
-                "span",
-                {
-                  className: "each-news-container-hidden",
-                  key: data[i].objectID,
-                  id: data[i].objectID,
-                },
-                commentCount,
-                voteCount,
-                upvoteBtn,
-                mainNewsContent,
-                newsLink,
-                by,
-                authorName,
-                newsPostTime,
-                hidePost
-              );
+          if (hidden_post_id_group) {
+            for (var w = 0; w < hidden_post_id_group.length; w++) {
+              if (hidden_post_id_group[w] == data[i].objectID) {
+                eachNewsContainer = React.createElement(
+                  "span",
+                  {
+                    className: "each-news-container-hidden",
+                    key: data[i].objectID,
+                    id: data[i].objectID,
+                  },
+                  commentCount,
+                  voteCount,
+                  upvoteBtn,
+                  mainNewsContent,
+                  newsLink,
+                  by,
+                  authorName,
+                  newsPostTime,
+                  hidePost
+                );
+              }
             }
           }
         }

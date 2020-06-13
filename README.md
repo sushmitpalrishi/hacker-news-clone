@@ -17,6 +17,6 @@ Design of this news page can be of like google discover news feed,
 Since gatsby SSR has been used, SEO comes automatically with the stater pack. But since 
 i am using the hello world starte pack, seo is not included, but can be added very easily.
 
-Unit Testing will be done using jest
+//Unit Testing will be done using jest - not done, have used mocha for node js, but gatsby uses jest
 
-Using Jenkins with docker form CI
+//Using Jenkins with docker form CI - was not able to fully install jenkins in my ubuntu system, not working properly
